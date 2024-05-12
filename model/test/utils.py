@@ -8,7 +8,7 @@ def top_anomalous(k, losses, preds, labels):
     idx = np.flip(np.argsort(losses))[:k]
 
     new_labels = [ 
-        str(f"label: {labels[_id]},\n  loss: {int(losses[_id] * 1e4) / 1e2}e-2") for _id in idx
+        str(f"label: {labels[_id]},\n  loss: {losses[_id]*1e2:.2f}e-2") for _id in idx
         ]
     tile_tv_images(images=preds[idx], labels=new_labels)
 
@@ -16,7 +16,7 @@ def top_mean_anomalous(k, mean_accs, imgs_predicted, labels):
     mean_labels = np.flip(np.argsort(mean_accs))[:k]
     is_color = imgs_predicted.shape[1] == 3
     new_labels = [ 
-        str(f"label: {mean_label},\n  loss: {int(mean_accs[mean_label] * 1e4) / 1e2}e-2") for mean_label in mean_labels
+        str(f"label: {mean_label},\n  loss: {mean_accs[mean_label]*1e2:.2f}e-2") for mean_label in mean_labels
         ]
     np_imgs_predicted = imgs_predicted.reshape(-1, 28, 28).cpu().detach().numpy() if not is_color else imgs_predicted.permute(0,2,3,1).cpu().detach().numpy()
 
