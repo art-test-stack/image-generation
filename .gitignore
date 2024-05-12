@@ -1,7 +1,18 @@
+ignored_files/
+models/
+trainers/
+datasets/
+archives/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
+
+lightning_logs/
+training_checkpoints/
+*.png
+tf_gan_images/
 
 # C extensions
 *.so
