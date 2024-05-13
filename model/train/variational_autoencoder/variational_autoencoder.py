@@ -1,5 +1,5 @@
 from model.train.variational_autoencoder.variational_encoder import VariationalEncoder
-from model.train.variational_autoencoder.variational_encoder import VariationalDecoder
+from model.train.variational_autoencoder.variational_decoder import VariationalDecoder
 
 import torch
 import torch.nn as nn
