@@ -22,7 +22,8 @@ class VAETrainer(Trainer):
             # loss, 
             # optimizer,
             device = DEVICE,
-            file_name: str | Path = VAE_MODEL, 
+            model_file: str | Path = VAE_MODEL, 
+            trainer_file: str | Path = VAE_TRAINER,
             force_learn: bool = False
         ) -> None:
 
@@ -30,7 +31,7 @@ class VAETrainer(Trainer):
         loss = KL_div
         opt = optim.Adam(model.parameters(), lr=VAE_LEARNING_RATE, betas=VAE_BETAS)
 
-        super().__init__(model=model, loss=loss, optimizer=opt, device=device, file_name=file_name, force_learn=force_learn)
+        super().__init__(model=model, loss=loss, optimizer=opt, device=device, model_file=model_file, trainer_file=trainer_file, force_learn=force_learn)
 
     def get_output_from_batch(self, batch):
         x, _, _ = batch

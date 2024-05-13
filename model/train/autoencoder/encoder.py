@@ -16,7 +16,7 @@ class Encoder(nn.Module):
             nn.MaxPool2d(kernel_size=(2, 2)),
             nn.Flatten(),
             nn.Linear(64 * 5 * 5, latent_space_size),
-            nn.Softmax(dim=1),
+            # nn.Softmax(dim=1),
         ) 
 
     def forward(self, x):

@@ -10,7 +10,8 @@ class AutoEncoderTrainer(Trainer):
     def __init__(
             self,
             device = DEVICE,
-            file_name: str | Path = AE_MODEL, 
+            model_file: str | Path = AE_MODEL, 
+            trainer_file: str | Path = AE_TRAINER, 
             force_learn: bool = False
         ) -> None:
 
@@ -18,7 +19,7 @@ class AutoEncoderTrainer(Trainer):
         loss = nn.MSELoss()
         opt = optim.Adam(model.parameters(), lr=AE_LEARNING_RATE, betas=AE_BETAS)
 
-        super().__init__(model=model, loss=loss, optimizer=opt, device=device, file_name=file_name, force_learn=force_learn)
+        super().__init__(model=model, loss=loss, optimizer=opt, device=device, model_file=model_file, trainer_file=trainer_file, force_learn=force_learn)
 
     def get_output_from_batch(self, batch):
         x, _, _ = batch

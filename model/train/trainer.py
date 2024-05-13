@@ -19,20 +19,23 @@ class Trainer:
             model,
             loss,
             optimizer,
-            file_name: str | Path,
+            model_file: str | Path,
+            trainer_file: str | Path,
             device = DEVICE,
             force_learn: bool = False
         ) -> None:
+        self.file = trainer_file
+        self.load(self)
 
         self.model = model
         self.loss = loss
         self.optimizer = optimizer
 
-        self.file_name = file_name
-
+        self.model_file = model_file
         self.load_weights()
         self.force_relearn = force_learn
 
+    
         self.device = device
         print('device:', device)
         self.model.to(device)
@@ -43,7 +46,7 @@ class Trainer:
         
     def load_weights(self):
         try:
-            self.model.load_state_dict(torch.load(self.file_name))
+            self.model.load_state_dict(torch.load(self.model_file))
             done_training = True
 
         except:
@@ -78,7 +81,8 @@ class Trainer:
                 validation_set=val_set,
                 epochs=epochs,
                 )
-            torch.save(self.model.state_dict(), self.file_name)
+            torch.save(self.model.state_dict(), self.model_file)
+            self.save()
             self.done_training = True
 
     def fit(
@@ -133,13 +137,6 @@ class Trainer:
 
         tile_tv_images(images=imgs_pred, labels=labels)
 
-    def load_trainer(self, trainer_file):
-        with open(trainer_file, 'rb') as inp:
-            trainer = pickle.load(inp)
-
-        trainer.force_relearn = False
-        return trainer
-
     def print_class_coverage_and_predictability(self, VerifNet, dataset, batch_size: int = 10_000, tolerance: float = .8):
         data = DataLoader(dataset, shuffle=True, batch_size=batch_size)
         imgs, _, labels = next(iter(data))
@@ -152,3 +149,16 @@ class Trainer:
         print(f"Coverage: {100*cov:.2f}%")
         print(f"Predictability: {100*pred:.2f}%")
         print(f"Accuracy: {100 * acc:.2f}%")
+
+    @classmethod
+    def load(cls, self):
+        with open(self.file, 'rb') as file:
+            trainer = pickle.load(file)
+
+        return trainer
+    
+    def save(self):
+        with open(self.file, 'wb') as file:
+            pickle.dump(self, file)
+
+        # return trainer
