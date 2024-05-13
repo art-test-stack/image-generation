@@ -3,24 +3,26 @@ from model.train.variational_autoencoder.variational_autoencoder import Variatio
 from model.settings import *
 
 import torch
-from torch import optim
+from torch import nn, optim
 import torch.nn.functional as F
 from pathlib import Path
 
-def KL_div(X, params):
-    x_hat, x = X
-    mu, log_var = params
-    BCE = F.binary_cross_entropy(x_hat, x, reduction='mean')
-    KLD = torch.mean(- 0.5 * torch.mean(1 + log_var - mu.pow(2) - torch.exp(log_var), axis=1))
+class KL_div(nn.Module):
+    def __init__(self, beta: float = VAE_BETA_KL) -> None:
+        super().__init__()
+        self.beta = beta
+    
+    def forward(self, X, params):
+        x_hat, x = X
+        mu, log_var = params
+        BCE = F.binary_cross_entropy(x_hat, x, reduction='mean')
+        KLD = torch.mean(- 0.5 * torch.mean(1 + log_var - mu.pow(2) - torch.exp(log_var), axis=1))
 
-    return BCE + .02 * KLD
-
+        return BCE + self.beta * KLD
+    
 class VAETrainer(Trainer):
     def __init__(
-            self, 
-            # model: VariationalAutoEncoder, 
-            # loss, 
-            # optimizer,
+            self,
             device = DEVICE,
             model_file: str | Path = VAE_MODEL, 
             trainer_file: str | Path = VAE_TRAINER,
@@ -28,7 +30,7 @@ class VAETrainer(Trainer):
         ) -> None:
 
         model = VariationalAutoEncoder(latent_space_size=VAE_LATENT_SPACE_SIZE)
-        loss = KL_div
+        loss = KL_div()
         opt = optim.Adam(model.parameters(), lr=VAE_LEARNING_RATE, betas=VAE_BETAS)
 
         super().__init__(model=model, loss=loss, optimizer=opt, device=device, model_file=model_file, trainer_file=trainer_file, force_learn=force_learn)

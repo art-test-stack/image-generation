@@ -25,7 +25,6 @@ class Trainer:
             force_learn: bool = False
         ) -> None:
         self.file = trainer_file
-        self.load(self)
 
         self.model = model
         self.loss = loss
@@ -43,6 +42,7 @@ class Trainer:
         self.device_not_cpu = not (device == torch.device('cpu'))
         self.losses = []
         self.val_losses = []
+        self.load(self)
         
     def load_weights(self):
         try:
