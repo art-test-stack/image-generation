@@ -20,5 +20,5 @@ class Encoder(nn.Module):
         ) 
 
     def forward(self, x):
-        out = self.main(x) 
+        out = self.main(x)
         return out

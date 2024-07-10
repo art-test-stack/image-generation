@@ -24,25 +24,30 @@ class Trainer:
             device = DEVICE,
             force_learn: bool = False
         ) -> None:
+         
         self.file = trainer_file
 
-        self.model = model
-        self.loss = loss
-        self.optimizer = optimizer
+        if self.file.exists():
+            print("Load Trainer...")
+            self.load(self)
 
-        self.model_file = model_file
+        else:
+            self.model = model
+            self.loss = loss
+            self.optimizer = optimizer
+
+            self.model_file = model_file
+
+            self.device = device
+            self.model.to(device)
+
+            self.device_not_cpu = not (device == torch.device('cpu'))
+            self.losses = []
+            self.val_losses = []
+        
         self.load_weights()
         self.force_relearn = force_learn
-
-    
-        self.device = device
-        print('device:', device)
-        self.model.to(device)
-
-        self.device_not_cpu = not (device == torch.device('cpu'))
-        self.losses = []
-        self.val_losses = []
-        self.load(self)
+        # self.load(self)
         
     def load_weights(self):
         try:
@@ -152,10 +157,11 @@ class Trainer:
 
     @classmethod
     def load(cls, self):
-        with open(self.file, 'rb') as file:
-            trainer = pickle.load(file)
-
-        return trainer
+        if self.file.exists():
+            with open(self.file, 'rb') as file:
+                self = pickle.load(file)
+        return self
+        # return trainer
     
     def save(self):
         with open(self.file, 'wb') as file:

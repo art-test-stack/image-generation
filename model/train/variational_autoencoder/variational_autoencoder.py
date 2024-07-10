@@ -12,13 +12,6 @@ class VariationalAutoEncoder(nn.Module):
         self.encoder = VariationalEncoder(latent_space_size=latent_space_size)
         self.decoder = VariationalDecoder(latent_space_size=latent_space_size)
 
-    def reparametrize(self, mu, log_var):
-        std = torch.sqrt(torch.exp(log_var))
-        eps = torch.randn_like(std)
-
-        z = mu + eps * std
-        return z
-
     def forward(self, x):
         mu, log_var = self.encoder(x)
 
@@ -28,3 +21,10 @@ class VariationalAutoEncoder(nn.Module):
 
         return (mu, log_var), x_hat
     
+    @staticmethod
+    def reparametrize(mu, log_var):
+        std = torch.exp(.5 * log_var)
+        eps = torch.randn_like(std)
+
+        z = mu + eps * std
+        return z
