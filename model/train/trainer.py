@@ -68,7 +68,7 @@ class Trainer:
             valset: StackedMNIST, 
             epochs: int = 10, 
             batch_size: int = 256
-        ) -> bool:
+        ) -> None:
         self.load_weights()
 
         if self.force_relearn or self.done_training is False:

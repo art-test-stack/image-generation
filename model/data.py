@@ -31,7 +31,7 @@ class OneHot(nn.Module):
         return out.reshape(10)
 
 
-class StackedMNIST(Dataset):
+class  StackedMNIST(Dataset):
     def __init__(
         self,
         root: str | Path = DATA_FILE,

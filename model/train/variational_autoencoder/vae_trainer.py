@@ -32,7 +32,7 @@ class VAETrainer(Trainer):
         ) -> None:
 
         model = VariationalAutoEncoder(latent_space_size=VAE_LATENT_SPACE_SIZE)
-        loss = KL_div()
+        loss = nn.KLDivLoss # KL_div()
         opt = optim.Adam(model.parameters(), lr=VAE_LEARNING_RATE, betas=VAE_BETAS)
 
         super().__init__(model=model, loss=loss, optimizer=opt, device=device, model_file=model_file, trainer_file=trainer_file, force_learn=force_learn)
